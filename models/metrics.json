@@ -1,0 +1,12 @@
+{
+  "model": "ComplementNB",
+  "cv_f1_macro_mean": 0.8988408173986183,
+  "cv_f1_macro_std": 0.02464871931063389,
+  "accuracy": 0.9221183800623053,
+  "precision_macro": 0.9254122814187857,
+  "recall_macro": 0.8961136388822529,
+  "f1_macro": 0.9009745276797066,
+  "n_samples": 2889,
+  "n_classes": 21,
+  "cv_folds": 5
+}

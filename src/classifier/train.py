@@ -5,7 +5,7 @@ import unicodedata
 import numpy as np
 from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import ComplementNB
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.metrics import (
@@ -159,13 +159,11 @@ def build_pipeline() -> Pipeline:
             max_features=8000,
             sublinear_tf=True,
         )),
-        ("clf", MultinomialNB(alpha=0.1, fit_prior=False)),
+        ("clf", ComplementNB(alpha=0.1)),
     ])
 
 
-# ------------------------------------------------------------------ #
 # Đánh giá bằng cross-validation
-# ------------------------------------------------------------------ #
 def evaluate_cv(pipeline: Pipeline, X: list[str], y: list[str], k: int = 5):
     cv = StratifiedKFold(n_splits=k, shuffle=True, random_state=42)
     X_arr = np.array(X, dtype=object)
@@ -184,16 +182,13 @@ def evaluate_cv(pipeline: Pipeline, X: list[str], y: list[str], k: int = 5):
 
 
 
-# ------------------------------------------------------------------ #
 # Vẽ Confusion Matrix
-# ------------------------------------------------------------------ #
 def plot_confusion_matrix(y_true, y_pred, labels, save_path: Path):
     cm = confusion_matrix(y_true, y_pred, labels=labels)
     
     fig, ax = plt.subplots(figsize=(20, 20))
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
     
-    # Plot with 'Blues' colormap just like the reference
     disp.plot(
         include_values=True,
         cmap='Blues',
@@ -202,7 +197,6 @@ def plot_confusion_matrix(y_true, y_pred, labels, save_path: Path):
         values_format='d'
     )
     
-    # Optional styling to ensure it matches the reference perfectly
     ax.set_title("Confusion Matrix — Inference Engine", fontsize=18, pad=20)
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
@@ -210,9 +204,7 @@ def plot_confusion_matrix(y_true, y_pred, labels, save_path: Path):
     plt.close()
 
 
-# ------------------------------------------------------------------ #
 # Main training
-# ------------------------------------------------------------------ #
 def train():
     console.print("\n[bold]Bat dau huan luyen Intent Classifier[/bold]\n")
 
@@ -259,7 +251,7 @@ def train():
 
     # 5.1 Tong hop metrics de frontend hien thi so lieu thuc
     metrics = {
-        "model": "MultinomialNB",
+        "model": "ComplementNB",
         "cv_f1_macro_mean": float(scores.mean()),
         "cv_f1_macro_std": float(scores.std()),
         "accuracy": float(accuracy_score(labels, y_cv_pred)),
@@ -301,9 +293,7 @@ def train():
     return pipeline
 
 
-# ------------------------------------------------------------------ #
 # Test nhanh sau khi train
-# ------------------------------------------------------------------ #
 def quick_test(pipeline: Pipeline):
     console.print("\n[bold]Quick Test:[/bold]")
     test_cases = [
