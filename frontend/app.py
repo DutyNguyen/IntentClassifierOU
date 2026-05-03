@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 import requests
 import numpy as np
@@ -7,11 +8,17 @@ import plotly.graph_objects as go
 from pathlib import Path
 
 import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-API_URL    = "https://intentclassifierou-be.onrender.com/docs"
+API_URL = os.getenv("API_URL", "https://intentclassifierou-be.onrender.com/api/predict")
+HEALTH_URL = os.getenv("HEALTH_URL", "https://intentclassifierou-be.onrender.com/api/health")
+API_KEY = os.getenv("API_KEY", "")
+HEADERS = {"X-API-Key": API_KEY} if API_KEY else {}
 METRICS_PATH = ROOT / "models" / "metrics.json"
 
 
@@ -156,10 +163,10 @@ with col_samples:
     if sample and not query:
         query = sample
 
-if query and backend_ok:
+if query:
     with st.spinner("Calculating Probabilities..."):
         try:
-            resp = requests.post(API_URL, json={"text": query}, timeout=10)
+            resp = requests.post(API_URL, json={"text": query}, headers=HEADERS, timeout=10)
             resp.raise_for_status()
             data = resp.json()
         except Exception as e:
