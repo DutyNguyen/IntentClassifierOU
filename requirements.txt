@@ -1,0 +1,24 @@
+# ===== NLP & ML =====
+underthesea>=6.8.4
+scikit-learn>=1.3.0
+numpy>=1.24.0
+joblib>=1.3.0
+
+# ===== Backend =====
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+
+# ===== Frontend =====
+streamlit>=1.32.0
+matplotlib>=3.7.0
+plotly>=5.18.0
+requests>=2.31.0
+
+# ===== Utilities =====
+rich>=13.6.0
+python-dotenv>=1.0.0
+
+# ===== Experiment =====
+jupyter>=1.0.0
+seaborn>=0.12.0
