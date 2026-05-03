@@ -129,8 +129,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-if API_KEY:
-    st.caption("Backend API key loaded from environment or Streamlit secrets.")
+
 
 # Backend health check
 try:
@@ -145,23 +144,11 @@ except Exception:
 # ------------------------------------------------------------------ #
 # Inference Input
 # ------------------------------------------------------------------ #
-col_input, col_samples = st.columns([2, 1])
-
-with col_input:
-    query = st.text_input(
-        "Observation (Evidence):",
-        placeholder="Enter user query here... (e.g., Điểm chuẩn ngành CNTT năm nay?)",
-        key="query_input"
-    )
-
-with col_samples:
-    st.markdown("<div style='margin-top: 28px;'></div>", unsafe_allow_html=True)
-    sample = st.selectbox(
-        "Or select a test sample:",
-        ["", "Điểm chuẩn ngành CNTT năm 2025?", "Học phí học kỳ 1 bao nhiêu?", "Liên thông CĐ lên ĐH cần gì?", "Có ký túc xá cho sinh viên không?", "IELTS 6.5 được cộng mấy điểm?"]
-    )
-    if sample and not query:
-        query = sample
+query = st.text_input(
+    "Observation (Evidence):",
+    placeholder="Enter user query here... (e.g., Điểm chuẩn ngành CNTT năm nay?)",
+    key="query_input"
+)
 
 if query:
     with st.spinner("Calculating Probabilities..."):
