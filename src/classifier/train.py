@@ -1,8 +1,3 @@
-"""
-train.py
-Huấn luyện Multinomial Naive Bayes Intent Classifier (Bayesian Networks)
-"""
-
 import json
 import joblib
 import random
@@ -26,7 +21,7 @@ import matplotlib.pyplot as plt
 from rich.console import Console
 from rich.table import Table
 
-# Đường dẫn
+# Path
 ROOT = Path(__file__).parent.parent.parent
 DATA_FILE = ROOT / "data" / "intents" / "intents.json"
 MODEL_DIR = ROOT / "models"
@@ -35,9 +30,7 @@ MODEL_DIR.mkdir(exist_ok=True)
 console = Console()
 
 
-# ------------------------------------------------------------------ #
 # Load dữ liệu
-# ------------------------------------------------------------------ #
 def load_data(path: Path) -> tuple[list[str], list[str]]:
     """Load intents.json → (sentences, labels)."""
     with open(path, encoding="utf-8") as f:
@@ -53,9 +46,7 @@ def load_data(path: Path) -> tuple[list[str], list[str]]:
     return texts, labels
 
 
-# ------------------------------------------------------------------ #
-# Preprocessing (import từ module nlp)
-# ------------------------------------------------------------------ #
+# Preprocessing 
 def preprocess(texts: list[str]) -> list[str]:
     """Tien xu ly tieng Viet."""
     try:
@@ -69,11 +60,9 @@ def preprocess(texts: list[str]) -> list[str]:
         return [t.lower().strip() for t in texts]
 
 
-# ------------------------------------------------------------------ #
 # Data Augmentation
-# ------------------------------------------------------------------ #
 def strip_diacritics(text: str) -> str:
-    """Chuyen tieng Viet co dau thanh khong dau. VD: 'điểm chuẩn' -> 'diem chuan'."""
+    """Chuyen tieng Viet co dau thanh khong dau."""
     nfd = unicodedata.normalize("NFD", text)
     # Bo tat ca combining diacritical marks (U+0300..U+036F) va
     # combining half marks, dang co the xuat hien trong tieng Viet
@@ -104,10 +93,6 @@ _TYPO_MAP = [
 
 
 def simulate_typo(text: str, p: float = 0.25) -> str:
-    """
-    Mo phong loi go phim nhe (xac suat p moi example).
-    Chi thay the 1 cap ki tu ngau nhien de khong lam mat qua nhieu thong tin.
-    """
     if random.random() > p:
         return text  # khong augment
     text_lower = text.lower()
@@ -166,10 +151,6 @@ def augment_data(
 # Pipeline definition
 # ------------------------------------------------------------------ #
 def build_pipeline() -> Pipeline:
-    """
-    TF-IDF bigram + Multinomial Naive Bayes.
-    Thuật toán thuộc họ Bayesian Networks, đáp ứng chính xác yêu cầu của môn học.
-    """
     return Pipeline([
         ("tfidf", TfidfVectorizer(
             ngram_range=(1, 2),
@@ -178,7 +159,7 @@ def build_pipeline() -> Pipeline:
             max_features=8000,
             sublinear_tf=True,
         )),
-        ("clf", MultinomialNB(alpha=0.1)),
+        ("clf", MultinomialNB(alpha=0.1, fit_prior=False)),
     ])
 
 

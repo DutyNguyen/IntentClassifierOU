@@ -15,9 +15,16 @@ load_dotenv()
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-API_URL = os.getenv("API_URL", "https://intentclassifierou-be.onrender.com/api/predict")
-HEALTH_URL = os.getenv("HEALTH_URL", "https://intentclassifierou-be.onrender.com/api/health")
-API_KEY = os.getenv("API_KEY", "")
+def _get_secret(name: str, default: str = "") -> str:
+    try:
+        return str(st.secrets.get(name, default))
+    except Exception:
+        return os.getenv(name, default)
+
+
+API_URL = _get_secret("API_URL", "https://intentclassifierou-be.onrender.com/api/predict")
+HEALTH_URL = _get_secret("HEALTH_URL", "https://intentclassifierou-be.onrender.com/api/health")
+API_KEY = _get_secret("API_KEY", "")
 HEADERS = {"X-API-Key": API_KEY} if API_KEY else {}
 METRICS_PATH = ROOT / "models" / "metrics.json"
 
@@ -131,6 +138,9 @@ st.markdown("""
     <h1>Probabilistic Inference Engine</h1>
 </div>
 """, unsafe_allow_html=True)
+
+if API_KEY:
+    st.caption("Backend API key loaded from environment or Streamlit secrets.")
 
 # Backend health check
 try:
