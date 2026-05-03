@@ -11,8 +11,7 @@ import streamlit as st
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-API_URL    = "http://localhost:8080/api/predict"
-HEALTH_URL = "http://localhost:8080/api/health"
+API_URL    = "https://intentclassifierou-be.onrender.com/docs"
 METRICS_PATH = ROOT / "models" / "metrics.json"
 
 
