@@ -129,11 +129,16 @@ Huấn luyện được thực hiện theo quy trình:
 \end{table}
 
 \subsection{Ma trận nhầm lẫn}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{models/confusion_matrix.png}
-    \caption{Ma trận nhầm lẫn theo dự đoán cross-validation.}
-\end{figure}
+\IfFileExists{models/confusion_matrix.png}{
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth]{models/confusion_matrix.png}
+        \caption{Ma trận nhầm lẫn theo dự đoán cross-validation.}
+    \end{figure}
+}{
+    \textit{Hình ảnh ma trận nhầm lẫn được tạo khi huấn luyện và lưu tại
+    \texttt{models/confusion\_matrix.png}.}
+}
 
 \section{Triển khai hệ thống}
 \subsection{Backend}
